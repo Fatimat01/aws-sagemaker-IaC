@@ -86,6 +86,14 @@ resource "aws_sagemaker_user_profile" "this" {
   }
 }
 
+# enable addtional apps for user profile
+resource "aws_sagemaker_app" "app" {
+  domain_id         = aws_sagemaker_domain.this.id
+  user_profile_name = aws_sagemaker_user_profile.this.user_profile_name
+  app_name          = var.app_name
+  app_type          = var.app_type
+}
+
 ## create MLflow Tracking Server
 resource "aws_sagemaker_mlflow_tracking_server" "this" {
   tracking_server_name = "${var.project_name}-mlflow"
@@ -97,13 +105,7 @@ resource "aws_sagemaker_mlflow_tracking_server" "this" {
   }
 }
 
-# enable addtional apps for user profile
-resource "aws_sagemaker_app" "app" {
-  domain_id         = aws_sagemaker_domain.this.id
-  user_profile_name = aws_sagemaker_user_profile.this[0].user_profile_name
-  app_name          = var.app_name
-  app_type          = var.app_type
-}
+
 
 ######## user profile
 # use same execution role as domain
